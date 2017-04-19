@@ -15,9 +15,11 @@ import java.util.List;
 public class Scraper {
 
     private static StringBuffer output;
+    private static StringBuffer error;
 
     public static void init(String urlString, Integer limit) throws Exception {
         output = new StringBuffer();
+        error = new StringBuffer();
         LinkStore.init();
         connectAndGetDoc(urlString, limit, 0);
     }
@@ -44,7 +46,9 @@ public class Scraper {
                     LinkStore.addToStore(cleanUrl);
                 }
             }
-        } catch(IOException e) {}
+        } catch(IOException e) {
+            error.append("Failed for ").append(urlString).append("\n");
+        }
     }
 
     private static List<String> getLinks(Document doc) {
@@ -69,5 +73,8 @@ public class Scraper {
 
     public static String getOutput() {
         return output.toString();
+    }
+    public static String getError() {
+        return error.toString();
     }
 }

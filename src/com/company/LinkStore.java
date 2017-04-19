@@ -20,4 +20,10 @@ public class LinkStore {
     public static void addToStore(String url) {
         links.put(url, true);
     }
+
+    public static void printStore() {
+        for(Map.Entry entry: links.entrySet()) {
+            System.out.println(entry.getKey() + "\n");
+        }
+    }
 }

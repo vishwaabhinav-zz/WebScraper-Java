@@ -15,6 +15,8 @@ public class Main {
             e.printStackTrace();
         } finally {
             System.out.println(Scraper.getOutput());
+            System.out.println("Errors ------------");
+            System.out.println(Scraper.getError());
             double time = ((System.nanoTime() - start) / 1000000000D);
             System.out.println("Time taken : " + time + " sec");
         }
