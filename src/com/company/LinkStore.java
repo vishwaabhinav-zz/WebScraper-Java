@@ -9,15 +9,15 @@ import java.util.Map;
 public class LinkStore {
     private static Map<String, Boolean> links;
 
-    public static void init() {
+    static void init() {
         links = new HashMap<>();
     }
 
-    public static Boolean isPresent(String url) {
+    static Boolean isPresent(String url) {
         return links.get(url) == null ? Boolean.FALSE : Boolean.TRUE;
     }
 
-    public static void addToStore(String url) {
+    static void addToStore(String url) {
         links.put(url, true);
     }
 

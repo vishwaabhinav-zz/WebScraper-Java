@@ -12,12 +12,12 @@ import java.util.List;
 /**
  * Created by abhinav on 01/04/17.
  */
-public class Scraper {
+class Scraper {
 
     private static StringBuffer output;
     private static StringBuffer error;
 
-    public static void init(String urlString, Integer limit) throws Exception {
+    static void init(String urlString, Integer limit) throws Exception {
         output = new StringBuffer();
         error = new StringBuffer();
         LinkStore.init();
@@ -28,26 +28,26 @@ public class Scraper {
         if(current >= limit) {
             return;
         }
-        try {
-            Document doc = Jsoup.connect(urlString).get();
-            List<String> urls = getLinks(doc);
-            output.append("Links for " + doc.title() + ":" + doc.location() + "\n");
+        Document doc = Jsoup.connect(urlString).get();
+        List<String> urls = getLinks(doc);
+        output.append("Links for " + doc.title() + ":" + doc.location() + "\n");
 
-            output.append("----------------------------\n");
-            for(String url: urls) {
-                output.append(url + "\n");
-            }
-            output.append("----------------------------\n");
+        output.append("----------------------------\n");
+        for(String url: urls) {
+            output.append(url + "\n");
+        }
+        output.append("----------------------------\n");
 
-            for(String url: urls) {
-                String cleanUrl = url.split("[?]")[0];
-                if(!LinkStore.isPresent(cleanUrl)) {
+        for(String url: urls) {
+            String cleanUrl = url.split("[?]")[0];
+            if(!LinkStore.isPresent(cleanUrl)) {
+                try {
                     connectAndGetDoc(url, limit, current + 1);
-                    LinkStore.addToStore(cleanUrl);
+                } catch(IOException e) {
+                    error.append("Failed for ").append(urlString).append("With " + e.getMessage()).append("\n");
                 }
+                LinkStore.addToStore(cleanUrl);
             }
-        } catch(IOException e) {
-            error.append("Failed for ").append(urlString).append("\n");
         }
     }
 
@@ -65,16 +65,21 @@ public class Scraper {
             } else if(linkUrl.matches("^/.*$")) {
                 String domain = url.split("[?]")[0];
                 linkUrls.add(domain + linkUrl);
+            } else if(linkUrl.matches("^[a-zA-Z0-9].*$")) {
+                if(!linkUrl.startsWith("javascript:") && !linkUrl.startsWith("tel:")) {
+                    String cleanUrl = url.split("[?]")[0];
+                    linkUrls.add(cleanUrl + "/" + linkUrl);
+                }
             }
         }
 
         return linkUrls;
     }
 
-    public static String getOutput() {
+    static String getOutput() {
         return output.toString();
     }
-    public static String getError() {
+    static String getError() {
         return error.toString();
     }
 }
