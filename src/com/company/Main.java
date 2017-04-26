@@ -19,6 +19,7 @@ public class Main {
             System.out.println(Scraper.getError());
             double time = ((System.nanoTime() - start) / 1000000000D);
             System.out.println("Time taken : " + time + " sec");
+//            LinkStore.printStore();
         }
     }
 }

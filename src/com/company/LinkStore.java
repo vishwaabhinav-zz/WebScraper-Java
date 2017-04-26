@@ -23,7 +23,7 @@ public class LinkStore {
 
     public static void printStore() {
         for(Map.Entry entry: links.entrySet()) {
-            System.out.println(entry.getKey() + "\n");
+            System.out.println(entry.getKey());
         }
     }
 }

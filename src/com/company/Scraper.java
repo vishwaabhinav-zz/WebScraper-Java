@@ -38,16 +38,26 @@ class Scraper {
         }
         output.append("----------------------------\n");
 
+        List<Thread> threadList = new ArrayList<>();
+
         for(String url: urls) {
             String cleanUrl = url.split("[?]")[0];
             if(!LinkStore.isPresent(cleanUrl)) {
-                try {
-                    connectAndGetDoc(url, limit, current + 1);
-                } catch(IOException e) {
-                    error.append("Failed for ").append(urlString).append("With " + e.getMessage()).append("\n");
-                }
+                Thread t = new Thread(() -> {
+                    try {
+                        connectAndGetDoc(url, limit, current + 1);
+                    } catch(Exception e) {
+                        error.append("Failed for ").append(urlString).append(" With " + e.getMessage()).append("\n");
+                    }
+                });
+                t.start();
+                threadList.add(t);
                 LinkStore.addToStore(cleanUrl);
             }
+        }
+
+        for(Thread t: threadList) {
+            t.join();
         }
     }
 
