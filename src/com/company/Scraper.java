@@ -43,7 +43,7 @@ class Scraper {
         }
         Document doc = Jsoup.connect(urlString).get();
         List<String> urls = getLinks(doc);
-        output.append("Links for " + doc.title() + ":" + doc.location() + "\n");
+        output.append("Links for ").append(doc.title()).append(":").append(doc.location()).append("\n");
 
         output.append("----------------------------\n");
         for(String url: urls) {
